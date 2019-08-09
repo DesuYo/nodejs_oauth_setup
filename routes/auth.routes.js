@@ -1,16 +1,16 @@
 const { Router } = require('express')
 
-const { initOauthServer, genAuthorizeMiddleware, genCallbackMiddleware } = require('../services/oauth.service')
+const { genAuthorizeMiddleware, genCallbackMiddleware } = require('../services/oauth.service')
+
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } = process.env
 
 module.exports = Router()
 
-.use('/', initOauthServer)
+.get('/google', genAuthorizeMiddleware('google', GOOGLE_CLIENT_ID))
 
-.get('/google', genAuthorizeMiddleware('google'))
+.get('/discord', genAuthorizeMiddleware('discord', DISCORD_CLIENT_ID))
 
-.get('/discord', genAuthorizeMiddleware('discord'))
+.get('/google/cb', genCallbackMiddleware('google', GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET))
 
-.get('/google/cb', genCallbackMiddleware('google'))
-
-.get('/discord/cb', genCallbackMiddleware('discord'))
+.get('/discord/cb', genCallbackMiddleware('discord', DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET))
 
